@@ -21,7 +21,7 @@ var commentRoutes 		= require("./routes/comments"),
 	indexRoutes 			= require("./routes/index");
 
 
-mongoose.connect('mongodb://localhost:27017/yelp_camp_v11', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost:27017/yelp_camp_v12', {useNewUrlParser: true, useUnifiedTopology: true});
 
 app.locals.moment = require("moment");
 app.use(bodyParser.urlencoded({extended: true}));
