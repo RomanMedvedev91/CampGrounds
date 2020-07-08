@@ -9,7 +9,11 @@
             }
         }
     </style>
-
+<% if(currentUser && currentUser.isAdmin) { %>
+	<h1>
+		You're Admin!
+</h1>
+<% } %>
 
 <header class="jumbotron">
 
