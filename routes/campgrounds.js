@@ -15,14 +15,34 @@ var geocoder = NodeGeocoder(options);
 
 //INDEX - show all campgrounds
 router.get("/", function(req, res){
-    // Get all campgrounds from DB
+//====== Fuzzy search
+	
+	if(req.query.search){
+		const regex = new RegExp(escapeRegex(req.query.search), "gi");
+	  Campground.find({name: regex}, function (err, allCampgrounds){
+            if (err) {
+                console.log(err);
+            } else {
+                if (allCampgrounds.length === 0) {
+                    req.flash('error', 'Sorry, no campgrounds match your query. Please try again');
+                    return res.redirect('back');
+                }
+                res.render('campgrounds/index', {campgrounds: allCampgrounds, page: 'campgrounds' });
+            }
+        });	
+// ==========		
+		
+	} else {
+		
+   // Get all campgrounds from DB
     Campground.find({}, function(err, allCampgrounds){
        if(err){
            console.log(err);
        } else {
-          res.render("campgrounds/index",{campgrounds: allCampgrounds, page: 'campgrounds'});
+          res.render("campgrounds/index", {campgrounds: allCampgrounds /*, page: 'campgrounds'*/});
        }
-    });
+    });		
+	}
 });
 
 
@@ -135,7 +155,10 @@ router.delete("/:id", middleware.checkCampgroundOwnership, function(req, res){
 });
 
 
+// Fuzzy search
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
-//middleware
 
 module.exports = router;
