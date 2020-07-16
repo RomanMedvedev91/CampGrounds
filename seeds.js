@@ -20,6 +20,34 @@ var data = [
 	}
 ];
 
+
+// async function seedDB(){
+// 	try{
+// 		await Campground.remove({});
+// 		console.log("Campgrounds removed");
+// 		await Comment.remove({});
+// 		console.log("Comments removed");
+		
+// 		for (const seed of data) {
+// 			let campground = await Campground.create(seed);
+// 			console.log("Comment created");
+// 			let comment = await Comment.create {
+// 				text: "This place is outstanding, but I wish there was internet",
+// 				author: "Homer"
+// 			}
+// 		}
+// 			console.log("Comment created");
+// 			campground.comments.push(comment);
+// 			campground.save();
+// 			console.log("comment added to campground");
+// 	}
+// 	catch(err){
+// 		console.log(err)
+// 		}
+// 	}
+
+
+
 function seedDB(){
 // 	remove campgrounds
 	Campground.remove({}, function(err){
