@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var Campground = require("../models/campground");
+var User = require('../models/user');
+var Notification = require('../models/notification');
 var middleware = require ("../middleware");
 var NodeGeocoder = require('node-geocoder');
 // ==== cloudinary ========
@@ -25,7 +27,9 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY, 
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
-// =========================================
+// ====cloudinary end=================
+
+// =====google map=========
 var options = {
   provider: 'google',
   httpAdapter: 'https',
@@ -70,6 +74,7 @@ router.get("/", function(req, res){
 
 // CREATE - add new campgrounds to DB
 
+/*
 router.post("/", middleware.isLoggedIn, upload.single("image"), function(req, res){
 	cloudinary.v2.uploader.upload(req.file.path, function(err, result){
 		if(err){
@@ -108,8 +113,56 @@ router.post("/", middleware.isLoggedIn, upload.single("image"), function(req, re
 });
 });
 
+*/
+router.post("/", middleware.isLoggedIn, upload.single("image"), async function(req, res){
+	cloudinary.v2.uploader.upload(req.file.path, async function(err, result){
+		if(err){
+			req.flash("error", err.message);
+			return res.redirect("back");
+		}
+	geocoder.geocode(req.body.location, async function (err, data) {
+		if(err || !data.length){
+			console.log(err);
+			req.flash("error", "Invalid adress");
+			return res.redirect("back");
+		}
+		req.body.campground.lat = data[0].latitude;
+   		req.body.campground.lng = data[0].longitude;
+    	req.body.campground.location = data[0].formattedAddress;	
+		
+// 		add cloudinary url for the image to the campground object under image property
+		req.body.campground.image = result.secure_url;
+// 	add image's public_id to campground object
+		req.body.campground.imageId = result.public_id;
+// add author to campground
+		req.body.campground.author = {
+			id: req.user._id,
+			username: req.user.username
+		}
+		var newlyCreated = req.body.campground;
+		// Create a new campground and save to DB
+	try {
+		let campground = await Campground.create(newlyCreated);
+		let user = await User.findById(req.user._id).populate('followers').exec();
+		let newNotification = {
+			username: req.user.username,
+			campgroundId: campground.id
+     	 }
+		for(const follower of user.followers) {
+		let notification = await Notification.create(newNotification);
+		follower.notifications.push(notification);
+		follower.save();
+		}
+		//redirect back to campground page	
+		res.redirect(`/campgrounds/${campground.id}`);
+	} catch(err) {
+			req.flash("error", err.message);
+			return res.redirect("back");
+			} 
+	});
 
-
+	});
+});
 	
 
 // NEW - show form to create new campground

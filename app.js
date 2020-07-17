@@ -18,7 +18,7 @@ passportLocalMongoose = require("passport-local-mongoose"),
 // requring routes
 var commentRoutes 		= require("./routes/comments"),
 	campgroundsRoutes 	= require("./routes/campgrounds"),
-	indexRoutes 			= require("./routes/index");
+	indexRoutes 		= require("./routes/index");
 
 
 mongoose.connect('mongodb://localhost:27017/yelp_camp_v12', {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
@@ -46,12 +46,22 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 // ================================================
 
-app.use(function(req, res, next){
+// ============notification============
+app.use(async function(req, res, next){
 	res.locals.currentUser = req.user;
+	if(req.user) {
+		try {
+			let user = await User.findById(req.user._id).populate('notifications', null, { isRead: false }).exec();
+     		res.locals.notifications = user.notifications.reverse();
+		} catch(err) {
+			console.log(err.message);
+		}
+	}
 	res.locals.error = req.flash("error");
 	res.locals.success = req.flash("success");
 	next();
 });
+// ================================================
 
 
 app.use("/", indexRoutes);

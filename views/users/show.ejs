@@ -4,13 +4,16 @@
 	
 	<div class="col-md-4">
 		<h1><%= user.firstName + " " + user.lastName %></h1>
+		
 		<div class="thumbnail">
 			<img src="<%= user.avatar %>" alt="user profile image">
 			<div class="caption"><a href="mailto: <%= user.email %>"><%= user.email %></a></div>
+			<a href="/follow/<%= user.id %>"><button class="btn btn-info btn-sm">Follow <%= user.username %></button></a>
 		</div>
 				Proin finibus justo odio, in lobortis lorem iaculis a. Fusce consectetur arcu eros, nec pellentesque felis rhoncus id. Aliquam vehicula odio in bibendum pharetra. Mauris pellentesque odio eu urna ultricies varius. Nunc viverra enim non augue porttitor convallis. Cras vel massa sit amet lorem egestas sollicitudin vitae non urna. Mauris blandit dignissim mi cursus ultrices.
 		Fusce eu dolor quam. Maecenas eget nisl metus. Ut a cursus quam. Curabitur mattis mi lectus, sed commodo nulla ultricies nec. Mauris vel molestie magna. Etiam condimentum sit amet sapien sit amet cursus. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 	</div>
+	
 	<div class="col-md-8">
 		<h3><%= user.username %>'s campgrounds</h3>
 		<ul>
