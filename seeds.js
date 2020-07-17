@@ -21,6 +21,7 @@ var data = [
 ];
 
 
+
 // async function seedDB(){
 // 	try{
 // 		await Campground.remove({});

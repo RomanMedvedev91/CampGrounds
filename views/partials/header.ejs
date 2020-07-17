@@ -35,8 +35,31 @@
 				<li class="nav-item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>">
 					<a class="nav-link" href="/register"><i class="fas fa-user-plus"></i> Sign Up</a></li>
 			<% } else { %>
+			<!--====NOTIFICATIONS====  -->
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+				   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				 <i class="fas fa-bell"></i> Notifications <%= notifications.length %>
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item" href="/notifications">
+						View past notifications
+					</a>
+					<div class="dropdown-divider"></div>
+					<% notifications.forEach(function(notification) { %>
+					<a class="dropdown-item" href="/notifications/<%= notification.id %>">
+					  <%= notification.username %> created a new campground
+					</a>
+					<% }) %>
+				</div>
+		  </li>
+			
+			
+	<!--====NOTIFICATIONS end====  -->
 				<li class="nav-item">
-					<a class="nav-link" href="#"><i class="fas fa-user-check"></i> Signed in as <%= currentUser.username %></a>
+					<a class="nav-link" href="#"><i class="fas fa-user-check"></i>
+						Signed in as <%= currentUser.username %>
+					</a>
 			 	</li>
 				<li class="nav-item">
 					<a class="nav-link" href="/logout"><i class="fas fa-user-minus"></i> Logout</a>
