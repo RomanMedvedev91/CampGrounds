@@ -1,6 +1,6 @@
 	require("dotenv").config();
 
-var express 	= require("express"),
+const express 	= require("express"),
 	app 		= express(),
 	request 	= require("request"),
 	bodyParser 	= require("body-parser"),
@@ -16,9 +16,9 @@ passportLocalMongoose = require("passport-local-mongoose"),
 	seedDB 		= require("./seeds");
 	
 // requring routes
-var commentRoutes 		= require("./routes/comments"),
-	campgroundsRoutes 	= require("./routes/campgrounds"),
-	indexRoutes 		= require("./routes/index");
+const commentRoutes 		= require("./routes/comments"),
+	  campgroundsRoutes 	= require("./routes/campgrounds"),
+	  indexRoutes	 		= require("./routes/index");
 
 
 mongoose.connect('mongodb://localhost:27017/yelp_camp_v12', {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
@@ -47,7 +47,7 @@ passport.deserializeUser(User.deserializeUser());
 // ================================================
 
 // ============notification============
-app.use(async function(req, res, next){
+app.use(async (req, res, next) => {
 	res.locals.currentUser = req.user;
 	if(req.user) {
 		try {
@@ -68,6 +68,7 @@ app.use("/", indexRoutes);
 app.use("/campgrounds", campgroundsRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
-app.listen(3000, function(){
-	console.log("Server is listening");
+const port = process.env.PORT || 3000;
+app.listen(port, function(){
+	console.log("Server Has Started!");
 });
